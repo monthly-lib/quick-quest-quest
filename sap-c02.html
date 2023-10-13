@@ -9,7 +9,6 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
     }
 
     .question-container {
@@ -31,18 +30,17 @@
       display: none;
     }
 
-    /* Apply styles to all buttons */
     .user-button {
       margin: 10px;
       padding: 20px;
-      /* Adjust the padding as needed */
       font-size: 16px;
-      /* Adjust the font size as needed */
       cursor: pointer;
     }
 
     pre {
-      white-space: pre-wrap; /* Preserve whitespace and allow wrapping */
+      width: 100%;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
     
     table {
@@ -78,6 +76,16 @@
     .false-checkbox {
       color: red;
     }
+
+    #result-canvas {
+      pointer-events: none;
+      position: fixed;
+      z-index: -10;
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: auto;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -90,7 +98,7 @@
     <button class="canvasBtn" id="startButton">startFlower</button>
   </div>
   <style>
-    canvas{
+    #canvas {
       z-index:10;
       pointer-events: none;
       position: fixed;
@@ -131,7 +139,7 @@
         'width': maskWidth,
         'height': maskHeight,
         'opacity': '0.3'
-      });
+      });5
 
       //마스크 표시
       $('#mask').show();
@@ -145,24 +153,86 @@
       $('#mask, #loadingImg').hide();
       $('#mask, #loadingImg').empty();
     }
+
+    function resizeCanvasToDisplaySize(canvas) {
+      // 브라우저가 캔버스를 표시하고 있는 크기를 CSS 픽셀 단위로 얻어옵니다.
+      const dpr = window.devicePixelRatio;
+      const displayWidth = Math.round(canvas.clientWidth * dpr);
+      const displayHeight = Math.round(canvas.clientHeight * dpr);
+
+      // 캔버스와 크기가 다른지 확인합니다.
+      const needResize = canvas.width !== displayWidth ||
+        canvas.height !== displayHeight;
+
+      if (needResize) {
+        // 캔버스를 동일한 크기가 되도록 합니다.
+        canvas.width = displayWidth;
+        canvas.height = displayHeight;
+      }
+
+      return needResize;
+    }
+
+    function drawAnswer() {
+      const canvas = document.getElementById('result-canvas');
+      const isItCorrect = canvas.classList.length == 0 ? undefined : canvas.classList.contains("correct-answer");
+      const ctx = canvas.getContext('2d');
+      resizeCanvasToDisplaySize(canvas);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (isItCorrect == undefined) {
+        return;
+      }
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      if (isItCorrect) {
+        const radius = canvas.width / 2;
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.lineWidth = 50; // Set the line width to create a hollow circle
+        ctx.strokeStyle = '#aaffaa'; // Set the stroke color to green
+        ctx.stroke();
+      }
+      else {
+        const lineLength = canvas.width;
+        const lineWidth = 50;
+
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = '#ffaaaa';
+
+        // Draw the first diagonal line (top-left to bottom-right)
+        ctx.beginPath();
+        ctx.moveTo(centerX - lineLength / 2, centerY - lineLength / 2);
+        ctx.lineTo(centerX + lineLength / 2, centerY + lineLength / 2);
+        ctx.stroke();
+
+        // Draw the second diagonal line (top-right to bottom-left)
+        ctx.beginPath();
+        ctx.moveTo(centerX + lineLength / 2, centerY - lineLength / 2);
+        ctx.lineTo(centerX - lineLength / 2, centerY + lineLength / 2);
+        ctx.stroke();
+      }
+    }
   </script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <canvas id="result-canvas"></canvas>
   <div class="question-container">
     <div class="question-content">
-
     </div>
 
-    <button class="user-button" onclick="showPreviousQuestion()">Previous</button>
-    <button class="user-button" onclick="showNextQuestion()">Next</button>
-    <button class="user-button" onclick="showRandomNextQuestion()">RandomNext</button>
+    <button class="user-button" style="width: calc(50% - 25px);" onclick="showPreviousQuestion()">◀ Previous</button>
+    <button class="user-button" style="width: calc(50% - 25px);" onclick="showNextQuestion()">Next ▶</button>
+    <button class="user-button" style="width: calc(100% - 25px);" onclick="showRandomNextQuestion()">Random Next</button>
 
     <div id="answer">
       <h3>Selected Answer:</h3>
       <p id="selected-answer"></p>
     </div>
 
-    <button class="user-button" onclick="toggleTable()">Toggle Table</button>
-    <button class="user-button" onclick="resetTableConfirm()">Reset Table</button>
+    <button class="user-button" style="width: calc(65% - 25px);" onclick="toggleTable()">Toggle Table</button>
+    <button class="user-button" style="background-color: red; width: calc(35% - 25px);" onclick="resetTableConfirm()">Reset Table</button>
     <table id="result-table" style="display: none;">
       <thead>
         <tr>
@@ -376,7 +446,7 @@
           displayQuestion(index);
         });
       }
-
+      document.getElementById("result-canvas").className = "";
       const inputString = questionStrings[index];
       const questionContainer = document.querySelector('.question-content');
 
@@ -425,7 +495,7 @@
         const explanation = explanationMatch ? explanationMatch[1] : 'Explanation not found';
 
         html += `</div>
-          <button class="user-button" onclick="checkAnswer()">Check Answer</button>
+          <button class="user-button" style="width: calc(100% - 25px);" onclick="checkAnswer()">Check Answer</button>
           <div id="answer" style="display: none;">
           <h3>Selected Answer:</h3>
           <p id="selected-answer"></p>
@@ -482,12 +552,13 @@
         setCookie('resultArray', resultArray, 30);
         setResultTable(currentQuestionIndex + 1, isItCorrect);
 
+        document.getElementById("result-canvas").classList = [ isItCorrect ? "correct-answer" : "wrong-answer" ];
         if(previousResult == undefined && 
         resultArray.every((e) => e !== undefined)) {
           $("#startButton").trigger("click");
           setTimeout(function(){
             $("#stopButton").trigger("click");
-          }, 10000);
+          }, 6000);
         }
       }
       else {
@@ -547,6 +618,11 @@
         currentQuestionIndex = questionNumber - 1;
       }
     });
+    
+
+    const observer = new MutationObserver(drawAnswer);
+    observer.observe(document.getElementById("result-canvas"), { attributes: true });
+    window.addEventListener("resize", drawAnswer);
 
     if (currentQuestionIndex == null) {
       currentQuestionIndex = 0;
