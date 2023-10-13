@@ -515,17 +515,10 @@
       currentQuestionIndex = getRandomInt(0, questionStrings.length - 1);
       let allPass = resultArray.every((e) => e === true);
       let allChecked = resultArray.every((e) => e !== undefined);
-      console.log(allPass)
       if (!allPass) {
-        console.log(allChecked)
-        console.log(currentQuestionIndex)
-        console.log(resultArray[currentQuestionIndex])
         while (allChecked ? resultArray[currentQuestionIndex] == true : resultArray[currentQuestionIndex] != undefined) {
           currentQuestionIndex = getRandomInt(0, questionStrings.length - 1);
-          console.log(currentQuestionIndex)
-          console.log(resultArray[currentQuestionIndex])
         }
-        console.log("end")
       }
 
       displayQuestion(currentQuestionIndex);
