@@ -180,6 +180,7 @@
       const ctx = canvas.getContext('2d');
       resizeCanvasToDisplaySize(canvas);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'xor';
 
       if (isItCorrect == undefined) {
         return;
@@ -193,7 +194,7 @@
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         ctx.lineWidth = 50; // Set the line width to create a hollow circle
-        ctx.strokeStyle = '#aaffaa'; // Set the stroke color to green
+        ctx.strokeStyle = 'rgba(160,255,160,0.5)'; // Set the stroke color to green
         ctx.stroke();
       }
       else {
@@ -201,7 +202,7 @@
         const lineWidth = 50;
 
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = '#ffaaaa';
+        ctx.strokeStyle = 'rgba(255,160,160,0.5)';
 
         // Draw the first diagonal line (top-left to bottom-right)
         ctx.beginPath();
