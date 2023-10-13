@@ -1,0 +1,8 @@
+const question_152=`QUESTION NO: 152 회사는 온프레미스 데이터 센터에서 Git 리포지토리를 호스팅합니다. 이 회사는 웹후크를 사용하여 AWS 클라우드에서 실행되는 기능을 호출합니다. 회사는 Application Load Balancer(ALB)의 대상으로 설정한 Auto Scaling 그룹의 Amazon EC2 인스턴스 세트에서 웹후크 로직을 호스팅합니다. Git 서버는 구성된 웹후크에 대해 ALB를 호출합니다. 회사는 솔루션을 서버리스 아키텍처로 이동하려고 합니다. 최소한의 운영 오버헤드로 이러한 요구 사항을 충족하는 솔루션은 무엇입니까? A. 각 Webhook에 대해 AWS Lambda 함수 URL을 생성하고 구성합니다. 개별 Lambda 함수 URL을 호출하도록 Git 서버를 업데이트합니다. B. Amazon API Gateway HTTP API를 생성합니다. 별도의 AWS Lambda 함수에서 각 Webhook 로직을 구현합니다. API Gateway 엔드포인트를 호출하도록 Git 서버를 업데이트합니다. C. Webhook 로직을 AWS App Runner에 배포합니다. ALB를 생성하고 App Runner를 대상으로 설정합니다. ALB 엔드포인트를 호출하도록 Git 서버를 업데이트합니다. D. 웹후크 로직을 컨테이너화합니다. Amazon Elastic Container Service(Amazon ECS) 클러스터를 생성하고 AWS Fargate에서 웹후크 로직을 실행합니다. Amazon API Gateway REST API를 생성하고 Fargate를 대상으로 설정합니다. API Gateway 엔드포인트를 호출하도록 Git 서버를 업데이트합니다. Answer: B Explanation: https://aws.amazon.com/solutions/implementations/git-to-s3-using-webhooks/ https://medium.com/mindorks/building-webhook-is-easy-using-aws-lambda-and-api-gateway-56f5e5c3a596
+GPT 3.5 says "텍스트에서 제공된 답변은 옳습니다. 최소한의 운영 오버헤드로 요구 사항을 충족시키기 위한 솔루션은 Amazon API Gateway HTTP API를 생성하고 별도의 AWS Lambda 함수에서 웹훅 로직을 구현하는 것입니다. Git 서버는 API Gateway 엔드포인트를 호출하도록 업데이트되어야 합니다.
+
+옵션 A는 각 웹훅에 대해 개별 Lambda 함수 URL을 생성하고 구성하는 것을 제안하므로 효율적이거나 확장 가능하지 않습니다.
+
+옵션 C는 이 시나리오에는 필요하지 않으며 불필요한 복잡성을 도입할 것이라고 제안하는 AWS App Runner에 웹훅 로직을 배포하는 것이므로 옳지 않습니다.
+
+옵션 D는 웹훅 로직을 컨테이너화하고 Amazon ECS와 Fargate를 사용하는 것을 제안하므로 불필요한 복잡성과 운영 오버헤드를 도입할 것이므로 옳지 않습니다."`;

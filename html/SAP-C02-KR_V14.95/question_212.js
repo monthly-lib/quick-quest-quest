@@ -1,0 +1,10 @@
+const question_212=`QUESTION NO: 212 솔루션 설계자는 회사의 Amazon EC2 인스턴스 및 Amazon Elastic Block Store(Amazon EBS) 볼륨을 분석하여 회사가 리소스를 효율적으로 사용하고 있는지 확인해야 합니다. /passive 구성 이러한 EC2 인스턴스의 활용도는 데이터베이스를 사용하는 애플리케이션에 따라 다르며 회사는 패턴을 식별하지 않았습니다. 솔루션 설계자는 환경을 분석하고 결과에 따라 조치를 취해야 합니다. 이러한 요구 사항을 가장 비용 효율적으로 충족하는 솔루션은 무엇입니까? A. AWS Systems Manager OpsConter를 사용하여 대시보드 생성 EC2 인스턴스 및 해당 EBS 볼륨과 연결된 Amazon CloudWatch 지표에 대한 시각화 구성 대시보드를 주기적으로 검토하고 사용 패턴 식별 지표의 최고점을 기준으로 EC2 인스턴스 크기 조정 B. EC2 인스턴스 및 해당 EBS 볼륨에 대한 Amazon CloudWatch 세부 모니터링을 켭니다. 메트릭을 기반으로 하는 대시보드 생성 및 검토 사용 패턴 식별 FC 크기 조정? 메트릭의 피크를 기반으로 하는 인스턴스 C. 각 EC2 인스턴스에 Amazon CloudWatch 에이전트를 설치합니다. AWS Compute Optimizer를 켜고 최소 12시간 동안 실행합니다. Compute Optimizer의 권장 사항을 검토하고 지시에 따라 EC2 인스턴스의 크기를 조정합니다. D. AWS Enterprise Support 플랜에 가입합니다. AWS Trusted Advisor를 켭니다. 12시간 동안 대기합니다. Trusted Advisor의 권장 사항을 검토하고 지시에 따라 EC2 인스턴스의 크기를 조정합니다. Answer: C Explanation: (https://aws.amazon.com/compute-optimizer/pricing/ , https://aws.amazon.com/systemsmanager/ pricing/ ). https://aws.amazon.com/compute-optimizer/
+GPT 3.5 says "정답은 C입니다.
+
+솔루션 아키텍트는 각 EC2 인스턴스에 Amazon CloudWatch 에이전트를 설치하고 AWS Compute Optimizer를 최소 12시간 동안 활성화해야 합니다. 이렇게 하면 아키텍트는 Compute Optimizer가 제공하는 권장 사항을 검토하고 EC2 인스턴스 크기를 조정할 수 있습니다. 이 솔루션은 리소스 활용 분석 및 최적화를 위한 AWS의 내장 기능을 활용하여 가장 비용 효율적입니다.
+
+옵션 A는 Amazon CloudWatch 메트릭의 시각화를 생성하고 검토하기 위해 AWS Systems Manager OpsCenter를 사용하는 것을 제안합니다. 이는 리소스 활용에 대한 통찰력을 제공할 수 있지만, 사용 패턴에 기반한 EC2 인스턴스 크기 조정에 대한 구체적인 권장 사항을 제공하지는 않습니다.
+
+옵션 B는 Amazon CloudWatch 상세 모니터링을 기반으로 대시보드를 생성하고 인스턴스 크기 조정을 위해 사용 패턴을 검토하는 것을 제안합니다. 이는 일부 통찰력을 제공할 수 있지만, 사용 패턴에 기반한 EC2 인스턴스 크기 조정에 대한 구체적인 권장 사항을 제공하지는 않습니다.
+
+옵션 D는 AWS Enterprise Support에 가입하고 AWS Trusted Advisor를 활성화하는 것을 제안합니다. Trusted Advisor는 리소스 최적화에 대한 권장 사항을 제공할 수 있지만, 사용 패턴에 기반한 EC2 인스턴스 크기 조정에 특별히 초점을 맞추지는 않습니다. 또한, 이 구체적인 요"`;

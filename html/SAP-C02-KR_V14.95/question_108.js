@@ -1,0 +1,16 @@
+const question_108=`QUESTION NO: 108 한 회사가 다중 계정 환경에서 AWS에서 애플리케이션을 실행하고 있습니다. 회사의 영업팀과 마케팅팀은 AWS Organizations에서 별도의 AWS 계정을 사용합니다. 영업팀은 Amazon S3 버킷에 페타바이트 규모의 데이터를 저장합니다. 마케팅 팀은 데이터 시각화를 위해 Amazon QuickSight를 사용합니다. 마케팅 팀은 상태 팀이 S3 버킷에 저장하는 데이터에 액세스해야 합니다. 회사는 AWS Key Management Service(AWS KMS) 키로 S3 버킷을 암호화했습니다. 마케팅 팀은 마케팅 AWS 계정에서 QuickSight 액세스를 제공하기 위해 QuickSight용 IAM 서비스 역할을 이미 생성했습니다. 회사는 AWS 계정 전체에서 S3 버킷의 데이터에 대한 보안 액세스를 제공할 솔루션이 필요합니다. 최소한의 운영 오버헤드로 이러한 요구 사항을 충족하는 솔루션은 무엇입니까? A. 마케팅 계정에 새 S3 버킷을 생성합니다. 판매 계정에서 S3 복제 규칙을 생성하여 객체를 마케팅 계정의 새 S3 버킷에 복사합니다. 새 S3 버킷에 대한 액세스 권한을 부여하려면 마케팅 계정에서 QuickSight 권한을 업데이트하십시오. B. S3 버킷에 대한 액세스 권한을 마케팅 계정에 부여하는 SCP를 생성합니다. AWS Resource Access Manager(AWS RAM)를 사용하여 sates 계정의 KMS 키를 마케팅 계정과 공유합니다. 마케팅 계정에서 QuickSight 권한을 업데이트하여 S3 버킷에 대한 액세스 권한을 부여합니다. C. 마케팅 계정에서 S3 버킷 정책을 업데이트하여 QuickSight 역할에 대한 액세스 권한을 부여합니다. S3 버킷에서 사용되는 암호화 키에 대한 KMS 권한 부여를 생성합니다. QuickSight 역할에 암호 해독 액세스 권한을 부여합니다. 마케팅 계정에서 QuickSight 권한을 업데이트하여 S3 버킷에 대한 액세스 권한을 부여합니다. D. 판매 계정에 IAM 역할을 생성하고 S3 버킷에 대한 액세스 권한을 부여합니다. 마케팅 계정에서 판매 계정의 IAM 역할을 맡아 S3 버킷에 액세스합니다. QuickSight 로트를 업데이트하여 영업 계정의 새 IAM 역할과 신뢰 관계를 만듭니다. Answer: D Explanation: Create an IAM role in the sales account and grant access to the S3 bucket. From the marketing account, assume the IAM role in the sales account to access the S3 bucket. Update the QuickSight role, to create a trust relationship with the new IAM role in the sales account. This approach is the most secure way to grant cross-account access to the data in the S3 bucket while minimizing operational overhead. By creating an IAM role in the sales account, the marketing team can assume the role in their own account, and have access to the S3 bucket. And updating the QuickSight role, to create a trust relationship with the new IAM role in the sales account will grant the marketing team to access the data in the S3 bucket and use it for data visualization using QuickSight. AWS Resource Access Manager (AWS RAM) also allows sharing of resources between accounts, but it would require additional management and configuration to set up the sharing, which would increase operational overhead. Using S3 replication would also replicate the data to the marketing account, but it would not provide the marketing team access to the original data, and also it would increase operational overhead with managing the replication process. IAM roles and policies, KMS grants and trust relationships are a powerful combination for managing cross-account access in a secure and efficient manner. Reference: AWS IAM Roles AWS KMS - Key Grants AWS RAM
+GPT 3.5 says "텍스트에서 제공된 답변은 잘못되었습니다. 올바른 답은 D입니다.
+
+설명:
+
+마케팅 AWS 계정의 마케팅 팀에 S3 버킷의 데이터에 안전한 액세스를 제공하기 위해 다음 단계를 수행해야 합니다:
+
+1. 판매 계정에서 IAM 역할을 생성하고 S3 버킷에 대한 액세스를 부여합니다.
+2. 마케팅 계정에서 판매 계정의 IAM 역할을 가정하여 S3 버킷에 액세스합니다.
+3. QuickSight 역할을 업데이트하여 판매 계정의 새 IAM 역할과 신뢰 관계를 생성합니다.
+
+이 접근 방식은 운영 오버헤드를 최소화하면서 S3 버킷의 데이터에 대한 계정 간 액세스를 제공하는 가장 안전한 방법입니다. 판매 계정에서 IAM 역할을 생성함으로써 마케팅 팀은 자신들의 계정에서 역할을 가정하고 S3 버킷에 액세스할 수 있습니다. QuickSight 역할을 업데이트하여 판매 계정의 새 IAM 역할과 신뢰 관계를 생성하면 마케팅 팀은 S3 버킷의 데이터에 액세스하고 QuickSight를 사용하여 데이터 시각화에 활용할 수 있습니다.
+
+질문에서 언급된 다른 옵션들은 가장 효율적이거나 안전한 솔루션은 아닙니다:
+
+A. 마케팅 계정에서 새로운 S3 버킷을 생성하고 S3 복제를 사용하여 판매 계정의 S3 버킷에서 객체를"`;

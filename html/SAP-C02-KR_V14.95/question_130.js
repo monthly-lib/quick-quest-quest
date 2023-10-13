@@ -1,0 +1,10 @@
+const question_130=`QUESTION NO: 130 회사는 데이터를 처리하기 위해 Amazon EC2 인스턴스에서 Python 스크립트를 실행합니다. 스크립트는 10분마다 실행됩니다. 스크립트는 Amazon S3 버킷에서 파일을 수집하고 파일을 처리합니다. 평균적으로 스크립트는 각 파일을 처리하는 데 약 5분이 걸립니다. 스크립트는 스크립트가 이미 처리한 파일을 다시 처리하지 않습니다. 이 회사는 Amazon CloudWatch 지표를 검토한 결과 파일 처리 속도 때문에 EC2 인스턴스가 시간의 약 40% 동안 유휴 상태임을 확인했습니다. 회사는 워크로드의 가용성과 확장성을 높이길 원합니다. 회사는 또한 장기적인 관리 오버헤드를 줄이기를 원합니다. 이러한 요구 사항을 가장 비용 효율적으로 충족하는 솔루션은 무엇입니까? A. 데이터 처리 스크립트를 AWS Lambda 함수로 마이그레이션합니다. 회사에서 객체를 업로드할 때 S3 이벤트 알림을 사용하여 Lambda 함수를 호출하여 객체를 처리합니다. B. Amazon Simple Queue Service(Amazon SQS) 대기열을 생성합니다. 이벤트 알림을 SQS 대기열로 보내도록 Amazon S3를 구성합니다. 최소 크기가 인스턴스 1개인 EC2 Auto Scaling 그룹을 생성합니다. 데이터 처리 스크립트를 업데이트하여 SQS 대기열을 폴링합니다. SQS 메시지가 식별하는 S3 객체를 처리합니다. C. 데이터 처리 스크립트를 컨테이너 이미지로 마이그레이션합니다. EC2 인스턴스에서 데이터 처리 컨테이너를 실행합니다. 새 객체에 대해 S3 버킷을 폴링하고 결과 객체를 처리하도록 컨테이너를 구성합니다. D. 데이터 처리 스크립트를 AWS Fargate의 Amazon Elastic Container Service(Amazon ECS)에서 실행되는 컨테이너 이미지로 마이그레이션합니다. 컨테이너가 파일을 처리할 때 Fargate RunTaskAPI 작업을 호출하는 AWS Lambda 함수를 생성합니다. S3 이벤트 알림을 사용하여 Lambda 함수를 호출합니다. Answer: D(A인것같다) Explanation: migrating the data processing script to an AWS Lambda function and using an S3 event notification to invoke the Lambda function to process the objects when the company uploads the objects. This solution meets the company's requirements of high availability and scalability, as well as reducing long-term management overhead, and is likely to be the most cost-effective option.
+GPT 3.5 says "텍스트에서 제공된 답변은 잘못되었습니다. 올바른 답은 A입니다.
+
+데이터 처리 스크립트를 AWS Lambda 함수로 마이그레이션하고, 회사가 객체를 업로드할 때 Lambda 함수를 호출하기 위해 S3 이벤트 알림을 사용하는 것이 회사의 고가용성, 확장성 및 장기간 관리 오버헤드 감소 요구 사항을 충족하는 가장 비용 효율적인 솔루션입니다.
+
+AWS Lambda를 사용하면 EC2 인스턴스를 실행하고 관리할 필요가 없어 비용을 절감할 수 있습니다. Lambda 함수는 S3 이벤트 알림에 의해 트리거되므로, 새 파일이 S3 버킷에 업로드될 때마다 스크립트가 실행됩니다. 이로써 스크립트가 매 10분마다 실행되어야 하는 필요성이 사라지며, EC2 인스턴스의 유휴 시간을 줄일 수 있습니다.
+
+또한, AWS Lambda는 자동으로 확장하여 들어오는 작업 부하를 처리하여 고가용성과 확장성을 보장합니다. 회사는 인프라를 관리하거나 리소스를 수동으로 확장할 필요가 없습니다.
+
+따라서, 옵션 A가 올바른 답입니다."`;

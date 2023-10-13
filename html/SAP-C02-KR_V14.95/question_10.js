@@ -1,0 +1,6 @@
+const question_10=`QUESTION NO: 10 회사는 Amazon S3를 사용하여 다양한 스토리지 클래스에 파일과 이미지를 저장합니다. 회사의 S3 비용은 작년에 크게 증가했습니다. 솔루션 설계자는 지난 12개월 동안의 데이터 추세를 검토하고 개체에 적합한 스토리지 클래스를 식별해야 합니다. 이러한 요구 사항을 충족하는 솔루션은 무엇입니까? A. 지난 12개월간의 S3 사용에 대한 AWS 비용 및 사용 보고서를 다운로드하십시오. 비용 절감을 위한 AWS Trusted Advisor 권장 사항을 검토합니다. B. S3 스토리지 클래스 분석을 사용합니다. 데이터 추세를 Amazon QuickSight 대시보드로 가져와 스토리지 추세를 분석합니다. C. Amazon S3 Storage Lens를 사용합니다. 스토리지 경향에 대한 고급 지표를 포함하도록 기본 대시보드를 업그레이드하십시오. D. S3용 액세스 분석기를 사용합니다. 지난 12개월 동안의 Access Analyzer for S3 보고서를 다운로드하십시오. csvfile을 Amazon QuickSight 대시보드로 가져옵니다. Answer: B(C인것같음) Explanation: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html
+GPT 3.5 says "The answer provided in the text is B. S3 스토리지 클래스 분석을 사용합니다. 데이터 추세를 Amazon QuickSight 대시보드로 가져와 스토리지 추세를 분석합니다.
+
+The correct answer is B. S3 스토리지 클래스 분석을 사용합니다. 데이터 추세를 Amazon QuickSight 대시보드로 가져와 스토리지 추세를 분석합니다.
+
+The solution architect should use S3 Storage Class Analysis to analyze the data trends and identify the appropriate storage class for the objects. This feature provides insights into the access patterns and allows for cost optimization by selecting the most suitable storage class based on the usage patterns. By using Amazon QuickSight, the data can be visualized and analyzed in a dashboard format for better decision-making."`;

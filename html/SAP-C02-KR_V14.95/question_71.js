@@ -1,0 +1,10 @@
+const question_71=`QUESTION NO: 71 한 회사에 데이터 계층이 단일 AWS 리전에 배포된 중요한 애플리케이션이 있습니다. 데이터 계층은 Amazon DynamoDB 테이블과 Amazon Aurora MySQL DB 클러스터를 사용합니다. 현재 Aurora MySQL 엔진 버전은 글로벌 데이터베이스를 지원합니다. 애플리케이션 계층은 이미 두 지역에 배포되었습니다. 회사 정책에 따르면 중요한 애플리케이션에는 애플리케이션 계층 구성 요소와 데이터 계층 구성 요소가 두 지역에 걸쳐 배포되어야 합니다. RTO 및 RPO는 각각 몇 분을 넘지 않아야 합니다. 솔루션 설계자는 데이터 계층이 회사 정책을 준수하도록 하는 솔루션을 권장해야 합니다. 이러한 요구 사항을 충족하는 단계 조합은 무엇입니까? (2개 선택하세요.) A. Aurora MySQL DB 클러스터에 다른 리전 추가 B. Aurora MySQL DB 클러스터의 각 테이블에 다른 리전 추가 C. DynamoDB 테이블 및 Aurora MySQL DB 클러스터에 대한 예약된 교차 리전 백업 설정 D. 구성에 다른 리전을 추가하여 기존 DynamoDB 테이블을 전역 테이블로 변환 E. Amazon Route 53 애플리케이션 복구 컨트롤러를 사용하여 보조 리전으로 데이터베이스 백업 및 복구 자동화 Answer: A,D Explanation: The company should use Amazon Aurora global database and Amazon DynamoDB global table to deploy the data tier components across two Regions. Amazon Aurora global database is a feature that allows a single Aurora database to span multiple AWS Regions, enabling low-latency global reads and fast recovery from Region-wide outages1. Amazon DynamoDB global table is a feature that allows a single DynamoDB table to span multiple AWS Regions, enabling low-latency global reads and writes and fast recovery from Regionwide outages2. Reference: https://aws.amazon.com/rds/aurora/global-database/ https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/globaltables_HowItW orks.html https://aws.amazon.com/route53/application-recovery-controller/
+GPT 3.5 says "텍스트에서 제공된 답변은 잘못되었습니다. 올바른 답은 A와 D입니다.
+
+회사의 정책에 따라 응용 프로그램 계층과 데이터 계층 구성 요소를 두 개의 지역에 배포하기 위해 솔루션 아키텍트는 다음 단계를 권장해야 합니다:
+
+A. Aurora MySQL DB 클러스터에 다른 지역 추가: Aurora MySQL DB 클러스터에 다른 지역을 추가함으로써 데이터 계층 구성 요소가 두 개의 지역에 배포되어 회사의 정책을 충족시킵니다.
+
+D. 구성에 다른 지역 추가 및 기존 DynamoDB 테이블을 글로벌 테이블로 변환: 구성에 다른 지역을 추가하고 기존 DynamoDB 테이블을 글로벌 테이블로 변환함으로써 데이터 계층 구성 요소가 두 개의 지역에 배포되어 회사의 정책을 충족시킵니다.
+
+이러한 단계는 데이터 계층 구성 요소가 두 개의 지역에 배포되어 장애 조치 시간(RTO) 및 복구 시점 목표(RPO)에 대한 회사의 정책 요구 사항을 충족시킵니다."`;

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .question-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #answer {
+      margin-top: 20px;
+      display: none;
+    }
+
+    /* Apply styles to all buttons */
+    .user-button {
+      margin: 10px;
+      padding: 20px;
+      /* Adjust the padding as needed */
+      font-size: 16px;
+      /* Adjust the font size as needed */
+      cursor: pointer;
+    }
+
+    pre {
+      white-space: pre-wrap; /* Preserve whitespace and allow wrapping */
+    }
+    
+    table {
+      width: 50%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+    }
+
+    th, td {
+      padding: 0px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    .question-number-button {
+      padding: 0px;
+      width: 100%;
+      height: 30px;
+      box-sizing: border-box;
+    }
+
+    .true-checkbox {
+      color: green;
+    }
+
+    .false-checkbox {
+      color: red;
+    }
+  </style>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body>
+  <header id="header">
+  <script src="./js/floweref.js"></script>
+  <div style="display: none;">
+    <button class="canvasBtn" id="stopButton">stopFlower</button>
+    <button class="canvasBtn" id="startButton">startFlower</button>
+  </div>
+  <style>
+    canvas{
+      z-index:10;
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      transform: scale(1,1);
+    }
+  </style>
+  <canvas id="canvas"></canvas>
+  </header>
+  <div id="loadingImg"></div>
+  <div id="mask" style="position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;"></div>
+  <div id="google_translate_element">
+
+  </div>
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: 'en'
+          , includedLanguages: 'ko,en'
+          , layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL // none or HORIZONTAL, SIMPLE
+        }
+        , 'google_translate_element'
+      );
+    }
+
+    function LoadingWithMask(gif) {
+      //화면의 높이와 너비를 구합니다.
+      var maskHeight = $(document).height();
+      var maskWidth = window.document.body.clientWidth;
+
+      //화면에 출력할 마스크를 설정해줍니다.
+      var loadingImg = '';
+      loadingImg += " <img src='" + gif + "' style='position: absolute; display: block; top: 50%; left: 50%; transform: translate(-50%,-50%);'/>";
+
+      //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채웁니다.
+      $('#mask').css({
+        'width': maskWidth,
+        'height': maskHeight,
+        'opacity': '0.3'
+      });
+
+      //마스크 표시
+      $('#mask').show();
+
+      //로딩중 이미지 표시
+      $('#loadingImg').append(loadingImg);
+      $('#loadingImg').show();
+    }
+
+    function closeLoadingWithMask() {
+      $('#mask, #loadingImg').hide();
+      $('#mask, #loadingImg').empty();
+    }
+  </script>
+  <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <div class="question-container">
+    <div class="question-content">
+
+    </div>
+
+    <button class="user-button" onclick="showPreviousQuestion()">Previous</button>
+    <button class="user-button" onclick="showNextQuestion()">Next</button>
+    <button class="user-button" onclick="showRandomNextQuestion()">RandomNext</button>
+
+    <div id="answer">
+      <h3>Selected Answer:</h3>
+      <p id="selected-answer"></p>
+    </div>
+
+    <button class="user-button" onclick="toggleTable()">Toggle Table</button>
+    <button class="user-button" onclick="resetTableConfirm()">Reset Table</button>
+    <table id="result-table" style="display: none;">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody id="result-table-body">
+      </tbody>
+    </table>
+
+  </div>
+
+  <script>
+    let todoCheckList = [
+      7,
+      10,
+      12,
+      28,
+      32,
+      37,
+      44,
+      47,
+      51,
+      55,
+      62,
+      66,
+      68,
+      70,
+      72,
+      73,
+      75,
+      77,
+      80,
+      89,
+      92,
+      93,
+      96,
+      97,
+      98,
+      100,
+      108,
+      111,
+      113,
+      114,
+      115,
+      116,
+      119,
+      120,
+      123,
+      125,
+      128,
+      130,
+      132,
+      133,
+      140,
+      141,
+      142,
+      143,
+      145,
+      156,
+      157,
+      166,
+      167,
+      168,
+      173,
+      176,
+      180,
+      181,
+      182,
+      183,
+      184,
+      186,
+      188,
+      189,
+      191,
+      192,
+      195,
+      198
+    ];
+
+    include = function (url, fn) {
+      var e = document.createElement("script");
+      e.onload = fn;
+      e.src = url;
+      e.async = true;
+      document.getElementsByTagName("head")[0].appendChild(e);
+    };
+
+    // Function to set a cookie with an array value
+    function setCookie(name, value, days) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${JSON.stringify(value)};expires=${expires.toUTCString()}; path=${window.location.host}/SAP-C02-KR_V14.95`;
+    }
+
+    // Function to get a cookie and parse it into an array
+    function getCookie(name) {
+      const cookieValue = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`);
+      return cookieValue ? JSON.parse(cookieValue[2]) : null;
+    }
+
+    let currentQuestionIndex = getCookie('currentQuestionIndex'); //0부터 시작하는 question number
+    const questionStrings = new Array(221);
+
+    let tableVisible = false;
+    let resultArray = getCookie('resultArray');
+    if (resultArray == null) {
+      resultArray = new Array(221);
+      resultArray.fill(undefined);
+    }
+    else{
+      for(let i = 0; i < resultArray.length; i++) {
+        if(resultArray[i] == undefined) {
+          resultArray[i] = undefined;
+        }
+      }
+    }
+    setCookie('resultArray', resultArray, 30);
+
+    function resetTableConfirm() {
+      if (window.confirm('Do you want to proceed?')) {
+        resetTable();
+      }
+    }
+
+    function initTable() {
+      const tableBody = document.querySelector('#result-table-body');
+      tableBody.innerHTML = "";
+      for(var i = 1; i <= 221; i++) {
+        let isGptCheck = todoCheckList.includes(i);
+        let style = "";
+        if (isGptCheck) {
+          style = `style="color: red; font-weight: bold; font-style: italic;" `;
+        }
+        else{
+          style = ``;
+        }
+
+        tableBody.innerHTML += `<tr id="tr-question-${i}">
+            <td><button class="question-number-button" ${style}onclick="displayQuestion(${i}-1)">${i}</button></td>
+            <td></td>
+          </tr>
+          `;
+
+        if (resultArray[i-1] != undefined) {
+          setResultTable(i, resultArray[i-1]);
+        }
+      }
+    }
+
+    function resetTable() {
+      resultArray = new Array(221);
+      resultArray.fill(undefined);
+      setCookie('resultArray', resultArray, 30);
+      initTable();
+    }
+
+    function toggleTable() {
+      const table = document.getElementById('result-table');
+      table.style.display = tableVisible ? 'none' : 'table';
+      tableVisible = !tableVisible;
+    }
+
+    function setResultTable(questionNumber, result){
+      const td1 = document.querySelector("#tr-question-"+questionNumber).children[0];
+      const td2 = document.querySelector("#tr-question-"+questionNumber).children[1];
+      if (result === true) {
+        td2.innerHTML = `<td>&#x2713;</td>`;
+        td2.className = "true-checkbox";
+      }
+      else if (result === false) {
+        td2.innerHTML = `<td>X</td>`;
+        td2.className = "false-checkbox";
+      }
+      else {
+        td2.innerHTML = `<td></td>`;
+      }
+    }
+
+    function replaceAll(input, find, replace) {
+      return input.replace(new RegExp(find, 'g'), replace);
+    }
+    
+    function extractAnswer(input) {
+      const startIndex = input.indexOf('Answer:');
+      const endIndex = input.indexOf('Explanation:');
+
+      if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+        let result = input.substring(startIndex + 'Answer:'.length, endIndex)
+        result = replaceAll(result, '"', '');
+        result = replaceAll(result, ' ', '');
+        return result.trim();
+      }
+      else {
+        return 'Strings "Answer:" and "Explain:" not found or in incorrect order.';
+      }
+    }
+
+    function containsNGeSelected(str) {
+      const regex = /(\d+)\s*개.*\s*선택*/i; // 정규 표현식: 숫자 + 개 + 선택 (대소문자 무시)
+      return regex.test(str);
+    }
+
+    function displayQuestion(index) {
+      if (questionStrings[index] == undefined) {
+        LoadingWithMask("./img/Ellipsis-1.3s-200px.gif");
+        return include(`./SAP-C02-KR_V14.95/question_${index + 1}.js`, function () {
+          closeLoadingWithMask();
+          questionStrings[index] = eval('question_' + (index + 1));
+          displayQuestion(index);
+        });
+      }
+
+      const inputString = questionStrings[index];
+      const questionContainer = document.querySelector('.question-content');
+
+      const questionMatch = inputString.match(/QUESTION NO: (\d+)([\s\S]*?)(?=A\. )/);
+      const questionNumber = questionMatch ? questionMatch[1] : '';
+      const questionText = questionMatch ? questionMatch[2].trim() : '';
+
+      const optionsRegex = /\s[A-G]\..+?(?=\s[A-G]\.|Answer:|$)/g;
+      const answerOptions = inputString.match(optionsRegex);
+
+      if (questionNumber && questionText && answerOptions) {
+        let html = `
+		  <div class="question">
+			<p>QUESTION NO: ${questionNumber}</p>
+			<p>${questionText}</p>
+		  </div>
+		  <div class="options">
+		`;
+
+        let nSelect = containsNGeSelected(inputString);
+
+        let optionCheckList = [];
+
+        answerOptions.forEach((option, index) => {
+          option = option.substring(1);
+          let optionChar = option[0];
+          if (!optionCheckList.includes(optionChar)) {
+            optionCheckList.push(optionChar);
+            if (nSelect) {
+              html += `<label><input type="checkbox" name="answer" value="${optionChar}"> ${option}</label><br>`;
+            }
+            else {
+              html += `<label><input type="radio" name="answer" value="${optionChar}"> ${option}</label><br>`;
+            }
+          }
+        });
+
+        // Answer를 추출
+        const correctAnswer = extractAnswer(inputString);
+
+        // Explanation 추출을 위한 정규식
+        const explanationRegex = /Explanation: ([\s\S]+)/;
+
+        // Explanation을 추출
+        const explanationMatch = inputString.match(explanationRegex);
+        const explanation = explanationMatch ? explanationMatch[1] : 'Explanation not found';
+
+        html += `</div>
+          <button class="user-button" onclick="checkAnswer()">Check Answer</button>
+          <div id="answer" style="display: none;">
+          <h3>Selected Answer:</h3>
+          <p id="selected-answer"></p>
+          <h3>Correct Answer:</h3>
+          <p id="correct-answer">${correctAnswer}</p>
+          </div>
+          <div id="explanation" style="display: none;">
+          <h3>Explanation:</h3>
+          <pre>${explanation}</pre>
+        `;
+
+        questionContainer.innerHTML = html;
+      }
+      else {
+        questionContainer.innerHTML = '<p>Invalid question format.</p>';
+      }
+
+      window.scrollTo(0, 0);
+      currentQuestionIndex = index;
+      updateUrlWithQuestionNumber();
+    }
+
+    // Function to check the answer (similar to previous example)
+    function checkAnswer() {
+      const answerElement = document.querySelectorAll('input[name="answer"]:checked');
+      if (answerElement) {
+        const valuesArray = Array.from(answerElement).map(element => element.value);
+        const valuesString = valuesArray.join(',');
+        const selectedAnswer = valuesString;
+        const selectedAnswerElement = document.getElementById('selected-answer');
+        selectedAnswerElement.textContent = selectedAnswer;
+
+        const answerDiv = document.getElementById('answer');
+        answerDiv.style.display = 'block';
+
+        const explanation = document.getElementById('explanation');
+        explanation.style.display = 'block';
+        answerDiv.scrollIntoView({ behavior: 'smooth' });
+
+        let comparedCorrectAnswer = document.getElementById('correct-answer').innerText;
+        
+        const keyword = "인것";
+        const keywordIndex = comparedCorrectAnswer.indexOf(keyword);
+        if (keywordIndex !== -1 && keywordIndex > 0) {
+          const substringBeforeKeyword = comparedCorrectAnswer.substring(0, keywordIndex);
+          const lastOpeningParenthesisIndex = substringBeforeKeyword.lastIndexOf("(");
+          comparedCorrectAnswer = substringBeforeKeyword.substring(lastOpeningParenthesisIndex+1);
+        }
+
+        const isItCorrect = selectedAnswer == comparedCorrectAnswer;
+        
+        let previousResult = resultArray[currentQuestionIndex];
+        resultArray[currentQuestionIndex] = isItCorrect;
+        setCookie('resultArray', resultArray, 30);
+        setResultTable(currentQuestionIndex + 1, isItCorrect);
+
+        if(previousResult == undefined && 
+        resultArray.every((e) => e !== undefined)) {
+          $("#startButton").trigger("click");
+          setTimeout(function(){
+            $("#stopButton").trigger("click");
+          }, 10000);
+        }
+      }
+      else {
+        alert('Please select an answer.');
+      }
+    }
+
+    function showNextQuestion() {
+      currentQuestionIndex = (currentQuestionIndex + 1) % questionStrings.length;
+      displayQuestion(currentQuestionIndex);
+    }
+
+    function showPreviousQuestion() {
+      currentQuestionIndex = (currentQuestionIndex - 1 + questionStrings.length) % questionStrings.length;
+      displayQuestion(currentQuestionIndex);
+    }
+
+    function getRandomInt(start, end) {
+      // 범위에 +1을 해서 end도 포함하도록 만듭니다.
+      const min = Math.ceil(start);
+      const max = Math.floor(end) + 1;
+      return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    function showRandomNextQuestion() {
+      currentQuestionIndex = getRandomInt(0, questionStrings.length - 1);
+      let allPass = resultArray.every((e) => e === true);
+      let allChecked = resultArray.every((e) => e !== undefined);
+      console.log(allPass)
+      if (!allPass) {
+        console.log(allChecked)
+        console.log(currentQuestionIndex)
+        console.log(resultArray[currentQuestionIndex])
+        while (allChecked ? resultArray[currentQuestionIndex] == true : resultArray[currentQuestionIndex] != undefined) {
+          currentQuestionIndex = getRandomInt(0, questionStrings.length - 1);
+          console.log(currentQuestionIndex)
+          console.log(resultArray[currentQuestionIndex])
+        }
+        console.log("end")
+      }
+
+      displayQuestion(currentQuestionIndex);
+    }
+
+    function updateUrlWithQuestionNumber() {
+      const newUrl = `${window.location.pathname}?question=${currentQuestionIndex + 1}`;
+      window.history.replaceState({}, '', newUrl);
+      setCookie('currentQuestionIndex', currentQuestionIndex, 30);
+    }
+
+    // Function to get the question number from the URL
+    function getQuestionNumberFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const questionNumber = urlParams.get('question');
+      return parseInt(questionNumber, 10);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Get the question number from the URL
+      const questionNumber = getQuestionNumberFromURL();
+
+      // Display the specified question
+      if (!isNaN(questionNumber) && questionNumber >= 1 && questionNumber <= questionStrings.length) {
+        currentQuestionIndex = questionNumber - 1;
+      }
+    });
+
+    if (currentQuestionIndex == null) {
+      currentQuestionIndex = 0;
+    }
+    initTable();
+
+    // Initial display of the first question
+    displayQuestion(currentQuestionIndex);
+  </script>
+</body>
+
+</html>
