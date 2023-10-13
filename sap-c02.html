@@ -80,7 +80,7 @@
 
     #result-canvas {
       pointer-events: none;
-      position: fixed;
+      position: absolute;
       z-index: -10;
       display: block;
       width: 100%;
@@ -178,9 +178,11 @@
       const canvas = document.getElementById('result-canvas');
       const isItCorrect = canvas.classList.length == 0 ? undefined : canvas.classList.contains("correct-answer");
       const ctx = canvas.getContext('2d');
+
+      const height = document.getElementsByClassName('question-content')[0].offsetHeight;
+      canvas.style.height = `${height}px`;
       resizeCanvasToDisplaySize(canvas);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.globalCompositeOperation = 'xor';
 
       if (isItCorrect == undefined) {
         return;
@@ -193,8 +195,8 @@
 
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-        ctx.lineWidth = 50; // Set the line width to create a hollow circle
-        ctx.strokeStyle = 'rgba(160,255,160,0.5)'; // Set the stroke color to green
+        ctx.lineWidth = 50;
+        ctx.strokeStyle = 'rgba(120,220,120,0.2)';
         ctx.stroke();
       }
       else {
@@ -202,16 +204,12 @@
         const lineWidth = 50;
 
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = 'rgba(255,160,160,0.5)';
+        ctx.strokeStyle = 'rgba(220,120,120,0.2)';
 
-        // Draw the first diagonal line (top-left to bottom-right)
         ctx.beginPath();
         ctx.moveTo(centerX - lineLength / 2, centerY - lineLength / 2);
         ctx.lineTo(centerX + lineLength / 2, centerY + lineLength / 2);
-        ctx.stroke();
 
-        // Draw the second diagonal line (top-right to bottom-left)
-        ctx.beginPath();
         ctx.moveTo(centerX + lineLength / 2, centerY - lineLength / 2);
         ctx.lineTo(centerX - lineLength / 2, centerY + lineLength / 2);
         ctx.stroke();
