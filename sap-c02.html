@@ -87,6 +87,55 @@
       height: 100%;
       margin: auto;
     }
+
+    .toggle-switch {
+      display: inline-block;
+      position: relative;
+      width: 60px;
+      height: 34px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .toggle-slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
   </style>
   <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -219,6 +268,11 @@
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <canvas id="result-canvas"></canvas>
   <div class="question-container">
+    <label class="toggle-switch">
+      <input id="questNumToggleSwitch" type="checkbox" onclick="toggleQuestionNumber()">
+      <span class="toggle-slider">hide question number</span>
+    </label>
+
     <div class="question-content">
     </div>
 
@@ -437,6 +491,17 @@
       return regex.test(str);
     }
 
+    function toggleQuestionNumber() {
+      let checkbox = document.querySelector('#questNumToggleSwitch');
+      let questNumElement = document.querSelector('#questNum');
+      if (checkbox.checked) {
+        questNumElement.innerHTML = `QUESTION NO: ${currentQuestionIndex+1}`;
+      }
+      else {
+        questNumElement.innerHTML = `QUESTION NO:`;
+      }
+    }
+
     function displayQuestion(index) {
       if (questionStrings[index] == undefined) {
         LoadingWithMask("./img/Ellipsis-1.3s-200px.gif");
@@ -460,7 +525,7 @@
       if (questionNumber && questionText && answerOptions) {
         let html = `
 		  <div class="question">
-			<p>QUESTION NO: ${questionNumber}</p>
+			<p id="questNum">QUESTION NO: ${questionNumber}</p>
 			<p>${questionText}</p>
 		  </div>
 		  <div class="options">
@@ -512,6 +577,8 @@
       else {
         questionContainer.innerHTML = '<p>Invalid question format.</p>';
       }
+
+      toggleQuestionNumber();
 
       window.scrollTo(0, 0);
       currentQuestionIndex = index;
