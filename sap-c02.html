@@ -43,6 +43,11 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
+
+    .tableContainer {
+      width: calc(100% - 25px);
+      padding: 10px;
+    }
     
     table {
       width: 50%;
@@ -86,6 +91,68 @@
       width: 100%;
       height: 100%;
       margin: auto;
+    }
+
+    .toggle-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .toggle-input {
+      appearance: none;
+      position: relative;
+      border: max(2px, 0.1em) solid gray;
+      border-radius: 1.25em;
+      width: 2.25em;
+      height: 1.25em;
+    }
+
+    .toggle-input::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 1em;
+      height: 1em;
+      border-radius: 50%;
+      transform: scale(0.8);
+      background-color: gray;
+      transition: left 250ms linear;
+    }
+
+    .toggle-input:checked {
+      background-color: tomato;
+      border-color: tomato;
+    }
+
+    .toggle-input:checked::before {
+      background-color: white;
+      left: 1em;
+    }
+
+    .toggle-input:disabled {
+      border-color: lightgray;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .toggle-input:disabled:before {
+      background-color: lightgray;
+    }
+
+    .toggle-input:disabled + span {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .toggle-input:focus-visible {
+      outline-offset: max(2px, 0.1em);
+      outline: max(2px, 0.1em) solid tomato;
+    }
+
+    .toggle-input:enabled:hover {
+      box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
     }
   </style>
   <script src="https://code.jquery.com/jquery-latest.min.js"></script>
@@ -233,20 +300,43 @@
 
     <button class="user-button" style="width: calc(65% - 25px);" onclick="toggleTable()">Toggle Table</button>
     <button class="user-button" style="background-color: red; width: calc(35% - 25px);" onclick="resetTableConfirm()">Reset Table</button>
-    <table id="result-table" style="display: none;">
-      <thead>
-        <tr>
-          <th>Question</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody id="result-table-body">
-      </tbody>
-    </table>
+    <div>
+      <div class="tableContainer">
+        <table id="result-number-table">
+          <thead>
+            <tr>
+              <th>correct</th>
+              <th>incorrect</th>
+              <th>unanswered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="correctCount">0</td>
+              <td id="incorrectCount">0</td>
+              <td id="unansweredCount">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="result-table" class="tableContainer" style="display: none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="result-table-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
 
   </div>
 
   <script>
+    const questionCount = 221;
     let todoCheckList = [
       7,
       10,
@@ -336,12 +426,12 @@
     }
 
     let currentQuestionIndex = getCookie('currentQuestionIndex'); //0부터 시작하는 question number
-    const questionStrings = new Array(221);
+    const questionStrings = new Array(questionCount);
 
     let tableVisible = false;
     let resultArray = getCookie('resultArray');
     if (resultArray == null) {
-      resultArray = new Array(221);
+      resultArray = new Array(questionCount);
       resultArray.fill(undefined);
     }
     else{
@@ -353,6 +443,8 @@
     }
     setCookie('resultArray', resultArray, 30);
 
+    let questionNumberVisible = true;
+
     function resetTableConfirm() {
       if (window.confirm('Do you want to proceed?')) {
         resetTable();
@@ -362,7 +454,7 @@
     function initTable() {
       const tableBody = document.querySelector('#result-table-body');
       tableBody.innerHTML = "";
-      for(var i = 1; i <= 221; i++) {
+      for(var i = 1; i <= questionCount; i++) {
         let isGptCheck = todoCheckList.includes(i);
         let style = "";
         if (isGptCheck) {
@@ -382,18 +474,29 @@
           setResultTable(i, resultArray[i-1]);
         }
       }
+
+      let correctAnswers = resultArray.reduce((count, current) => (current === true ? count + 1 : count), 0);
+      let incorrectAnswers = resultArray.reduce((count, current) => (current === false ? count + 1 : count), 0);
+
+      // 맞춘 문제, 틀린 문제, 안 푼 문제 개수 계산
+      const unansweredQuestions = questionCount - (correctAnswers + incorrectAnswers);
+
+      // 문제 개수를 HTML에 업데이트
+      document.getElementById("correctCount").textContent = correctAnswers;
+      document.getElementById("incorrectCount").textContent = incorrectAnswers;
+      document.getElementById("unansweredCount").textContent = unansweredQuestions;
     }
 
     function resetTable() {
-      resultArray = new Array(221);
+      resultArray = new Array(questionCount);
       resultArray.fill(undefined);
       setCookie('resultArray', resultArray, 30);
       initTable();
     }
 
     function toggleTable() {
-      const table = document.getElementById('result-table');
-      table.style.display = tableVisible ? 'none' : 'table';
+      const tableContainer = document.getElementById('result-table');
+      tableContainer.style.display = tableVisible ? 'none' : 'table';
       tableVisible = !tableVisible;
     }
 
@@ -459,12 +562,23 @@
 
       if (questionNumber && questionText && answerOptions) {
         let html = `
-		  <div class="question">
-			<p>QUESTION NO: ${questionNumber}</p>
-			<p>${questionText}</p>
-		  </div>
-		  <div class="options">
-		`;
+          <div class="question">
+          <p style="display: flex; justify-content: space-between;">
+            <span style="text-align: left;">
+              <span>QUESTION NO: </span>
+              <span id="questionNumber" style="display: ${questionNumberVisible ? "" : "none;"}">${questionNumber}</span>
+            </span>
+            <span style="text-align: right;">
+              <label class="toggle-label">
+                <input role="switch" type="checkbox" class="toggle-input" id="numberToggle" ${questionNumberVisible ? '' : 'checked="true"'}/>
+                <span>hide number</span>
+              </label>
+            </span>
+          </p>
+          <p>${questionText}</p>
+          </div>
+          <div class="options">
+        `;
 
         let nSelect = containsNGeSelected(inputString);
 
@@ -560,6 +674,17 @@
             $("#stopButton").trigger("click");
           }, 6000);
         }
+
+        let correctAnswers = resultArray.reduce((count, current) => (current === true ? count + 1 : count), 0);
+        let incorrectAnswers = resultArray.reduce((count, current) => (current === false ? count + 1 : count), 0);
+
+        // 맞춘 문제, 틀린 문제, 안 푼 문제 개수 계산
+        const unansweredQuestions = questionCount - (correctAnswers + incorrectAnswers);
+
+        // 문제 개수를 HTML에 업데이트
+        document.getElementById("correctCount").textContent = correctAnswers;
+        document.getElementById("incorrectCount").textContent = incorrectAnswers;
+        document.getElementById("unansweredCount").textContent = unansweredQuestions;
       }
       else {
         alert('Please select an answer.');
@@ -631,6 +756,14 @@
 
     // Initial display of the first question
     displayQuestion(currentQuestionIndex);
+
+    
+    $(document).ready(function () {
+      $(document).on('change', '#numberToggle', function () {
+        questionNumberVisible = !$(this).prop('checked');
+        $('#questionNumber').css("display", questionNumberVisible ? "" : "none");
+      });
+    });
   </script>
 </body>
 
