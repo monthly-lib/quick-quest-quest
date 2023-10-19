@@ -286,6 +286,7 @@
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <canvas id="result-canvas"></canvas>
   <div class="question-container">
+
     <div class="question-content">
     </div>
 
@@ -538,6 +539,17 @@
     function containsNGeSelected(str) {
       const regex = /(\d+)\s*개.*\s*선택*/i; // 정규 표현식: 숫자 + 개 + 선택 (대소문자 무시)
       return regex.test(str);
+    }
+
+    function toggleQuestionNumber() {
+      let checkbox = document.querySelector('#questNumToggleSwitch');
+      let questNumElement = document.querSelector('#questNum');
+      if (checkbox.checked) {
+        questNumElement.innerHTML = `QUESTION NO: ${currentQuestionIndex+1}`;
+      }
+      else {
+        questNumElement.innerHTML = `QUESTION NO:`;
+      }
     }
 
     function displayQuestion(index) {
