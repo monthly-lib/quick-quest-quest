@@ -337,73 +337,7 @@
   </div>
 
   <script>
-    const questionCount = 221;
-    let todoCheckList = [
-      7,
-      10,
-      12,
-      28,
-      32,
-      37,
-      44,
-      47,
-      51,
-      55,
-      62,
-      66,
-      68,
-      70,
-      72,
-      73,
-      75,
-      77,
-      80,
-      89,
-      92,
-      93,
-      96,
-      97,
-      98,
-      100,
-      108,
-      111,
-      113,
-      114,
-      115,
-      116,
-      119,
-      120,
-      123,
-      125,
-      128,
-      130,
-      132,
-      133,
-      140,
-      141,
-      142,
-      143,
-      145,
-      156,
-      157,
-      166,
-      167,
-      168,
-      173,
-      176,
-      180,
-      181,
-      182,
-      183,
-      184,
-      186,
-      188,
-      189,
-      191,
-      192,
-      195,
-      198
-    ];
+    const questionCount = 222;
 
     include = function (url, fn) {
       var e = document.createElement("script");
@@ -456,17 +390,8 @@
       const tableBody = document.querySelector('#result-table-body');
       tableBody.innerHTML = "";
       for(var i = 1; i <= questionCount; i++) {
-        let isGptCheck = todoCheckList.includes(i);
-        let style = "";
-        if (isGptCheck) {
-          style = `style="color: red; font-weight: bold; font-style: italic;" `;
-        }
-        else{
-          style = ``;
-        }
-
         tableBody.innerHTML += `<tr id="tr-question-${i}">
-            <td><button class="question-number-button" ${style}onclick="displayQuestion(${i}-1)">${i}</button></td>
+            <td><button class="question-number-button" onclick="displayQuestion(${i}-1)">${i}</button></td>
             <td></td>
           </tr>
           `;
