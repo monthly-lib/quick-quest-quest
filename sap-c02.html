@@ -604,13 +604,6 @@
         setResultTable(currentQuestionIndex + 1, isItCorrect);
 
         document.getElementById("result-canvas").classList = [ isItCorrect ? "correct-answer" : "wrong-answer" ];
-        if(previousResult == undefined && 
-        resultArray.every((e) => e !== undefined)) {
-          $("#startButton").trigger("click");
-          setTimeout(function(){
-            $("#stopButton").trigger("click");
-          }, 6000);
-        }
 
         let correctAnswers = resultArray.reduce((count, current) => (current === true ? count + 1 : count), 0);
         let incorrectAnswers = resultArray.reduce((count, current) => (current === false ? count + 1 : count), 0);
@@ -622,6 +615,14 @@
         document.getElementById("correctCount").textContent = correctAnswers;
         document.getElementById("incorrectCount").textContent = incorrectAnswers;
         document.getElementById("unansweredCount").textContent = unansweredQuestions;
+
+        if(previousResult == undefined && 
+        unansweredQuestions == 0) {
+          $("#startButton").trigger("click");
+          setTimeout(function(){
+            $("#stopButton").trigger("click");
+          }, 6000);
+        }
       }
       else {
         alert('Please select an answer.');
