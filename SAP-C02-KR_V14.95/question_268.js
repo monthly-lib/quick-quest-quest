@@ -1,0 +1,1 @@
+const question_268=`QUESTION NO: 268 Answer: A Explanation: `
