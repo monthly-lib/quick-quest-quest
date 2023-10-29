@@ -616,13 +616,13 @@
         document.getElementById("incorrectCount").textContent = incorrectAnswers;
         document.getElementById("unansweredCount").textContent = unansweredQuestions;
 
-        if(previousResult == undefined && 
-        unansweredQuestions == 0) {
-          $("#startButton").trigger("click");
-          setTimeout(function(){
-            $("#stopButton").trigger("click");
-          }, 6000);
-        }
+        // if(previousResult == undefined && 
+        // unansweredQuestions == 0) {
+        //   $("#startButton").trigger("click");
+        //   setTimeout(function(){
+        //     $("#stopButton").trigger("click");
+        //   }, 6000);
+        // }
       }
       else {
         alert('Please select an answer.');
